@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "npx tsx index.ts",
-    "dev": "tsx watch index.ts",
-    "build": "tsc",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
+  "start": "npx prisma migrate deploy && npx prisma db seed && tsx index.ts",
+  "dev": "tsx watch index.ts",
+  "build": "echo 'no build needed'",
+  "test": "vitest run",
+  "test:watch": "vitest"
+},
   "prisma": {
     "seed": "tsx seeds/seed.ts"
   },
