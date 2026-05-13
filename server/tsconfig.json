@@ -25,7 +25,7 @@
     "exactOptionalPropertyTypes": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["./shared/*"]
     },
 
     // Style Options
@@ -48,5 +48,5 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist"
   },
-  "include": ["src", "../shared/**/*"]
+  "include": ["src", "shared/**/*", "seeds/**/*", "controllers/**/*", "routes/**/*", "middleware/**/*"]
 }
