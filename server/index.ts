@@ -1,9 +1,9 @@
 import app from "./app";
-import connectMongoDB from "./db/connectMongo";
+import dotenv from "dotenv";
 
-const PORT = 5207;
+dotenv.config()
+const PORT = process.env.PORT
 
 app.listen(PORT, async () => {
   console.log(`🚀 Server ready at: http://localhost:${PORT}`);
-  await connectMongoDB();
 });

@@ -42,8 +42,6 @@ const MapDash = () => {
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-
-      {/* Map เต็มพื้นที่ */}
       <div className="absolute inset-0 w-full h-full">
         <MapChart
           filters={filters}
@@ -51,8 +49,6 @@ const MapDash = () => {
           diseaseConfig={diseaseConfig}
         />
       </div>
-
-      {/* Filter ลอยทับซ้ายบน */}
       <div className="absolute top-4 left-4 z-10 max-h-[calc(100vh-2rem)] overflow-y-auto">
         <MapFilters
           onFiltersChange={handleFiltersChange}

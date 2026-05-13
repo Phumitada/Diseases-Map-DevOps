@@ -30,7 +30,6 @@ export default function PatientReporting() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const token = useAuthStore((state) => state.token);
 
-    // Form States
     const [reportDate, setReportDate] = useState(new Date().toLocaleDateString("th-TH"));
     const [diseaseGroup, setDiseaseGroup] = useState("กลุ่มโรคติดต่อทางระบบทางเดินหายใจ");
     const [diseaseName, setDiseaseName] = useState("");
@@ -65,13 +64,12 @@ export default function PatientReporting() {
     const handleSubmit = async (e: React.BaseSyntheticEvent) => {
         e.preventDefault();
         if (!token) {
-            // redirect ไป /login
             return;
         }
         try {
             setIsSubmitted(true);
             await apiClient.post("/report", {
-                icdCode: icd10,   // ← ชื่อตรงกับ backend
+                icdCode: icd10,  
                 age: Number(age),
                 sex: sex,
             });
@@ -94,7 +92,6 @@ export default function PatientReporting() {
 
     return (
         <div className="pb-32 px-8 max-w-[1000px] mx-auto min-h-screen pt-12 animate-fade-in text-left">
-            {/* Header Section - Official Look */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-12 border-b border-slate-200 pb-10">
                 <div className="space-y-4">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-medical-green-50 text-medical-green-700 rounded text-[10px] font-black uppercase tracking-[0.2em] border border-medical-green-100">
@@ -112,18 +109,13 @@ export default function PatientReporting() {
             </div>
 
             <div className="bg-white border border-slate-200 rounded-md shadow-official overflow-hidden">
-                {/* Notice Bar */}
                 <div className="bg-medical-green-50/50 border-b border-medical-green-100 p-6 flex gap-4 items-start">
                     <Info className="w-5 h-5 text-medical-green-600 mt-0.5" />
                     <p className="text-slate-600 text-[13px] font-medium leading-relaxed">
                         <strong className="font-black text-medical-green-900">คำชี้แจง:</strong> ข้อมูลนี้จะถูกนำไปประมวลผลเพื่อกำหนดนโยบายสาธารณสุขระดับประเทศ โปรดตรวจสอบความถูกต้องของรหัส ICD-10/11 ก่อนทำการบันทึกทุกครั้ง
                     </p>
                 </div>
-
-                {/* Form Body */}
                 <form onSubmit={handleSubmit} className="p-10 space-y-16">
-
-                    {/* Section 1: Facility Info */}
                     <div className="space-y-8">
                         <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
                             <span className="w-7 h-7 rounded bg-medical-green-900 text-white flex items-center justify-center font-black text-[10px]">01</span>
@@ -188,8 +180,6 @@ export default function PatientReporting() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Section 2: Clinical Data */}
                     <div className="space-y-8">
                         <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
                             <span className="w-7 h-7 rounded bg-medical-green-900 text-white flex items-center justify-center font-black text-[10px]">02</span>
@@ -301,8 +291,6 @@ export default function PatientReporting() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Section 3: Severity & Logic */}
                     <div className="space-y-8">
                         <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
                             <span className="w-7 h-7 rounded bg-medical-green-900 text-white flex items-center justify-center font-black text-[10px]">03</span>
@@ -363,7 +351,6 @@ export default function PatientReporting() {
                         </div>
                     </div>
 
-                    {/* Submit Bar */}
                     <div className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-8 border-t border-slate-50">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">
                             <ShieldCheck className="w-4 h-4 text-medical-green-500" />
@@ -401,7 +388,6 @@ export default function PatientReporting() {
                 </div>
             </div>
 
-            {/* Facility Setup Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in text-left">
                     <div className="bg-white rounded-md shadow-2xl w-full max-w-lg overflow-hidden animate-scale-in">

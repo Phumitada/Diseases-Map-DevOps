@@ -1,4 +1,3 @@
-// features/auth/page/Login.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
@@ -34,7 +33,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col bg-light-bg bg-pattern">
-      {/* Top Utility Bar */}
       <div className="bg-medical-green-900 text-white/90 py-2 px-8 border-b border-white/5 hidden md:block">
         <div className="max-w-[1400px] mx-auto flex justify-between items-center text-[11px] font-bold tracking-wider uppercase">
           <div className="flex items-center gap-6">
@@ -59,11 +57,8 @@ export default function Login() {
           </div>
         </div>
       </div>
-
-      {/* Sticky Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200/60 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center gap-4" onClick={() => navigate('/')}>
-          {/* Logo Section */}
           <div className="w-12 h-12 rounded-lg bg-medical-green-900 text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
             <ShieldAlert className="w-7 h-7" />
           </div>
@@ -77,13 +72,9 @@ export default function Login() {
           </div>
         </div>
       </header>
-
-      {/* Main Content */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Glassmorphism Card */}
           <div className="backdrop-blur-md bg-white/80 border border-slate-200/60 rounded-2xl shadow-card p-8 md:p-10">
-            {/* Logo & Title */}
             <div className="flex flex-col items-center mb-8">
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-medical-green-700 text-white flex items-center justify-center shadow-primary mb-4">
                 <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>login</span>
@@ -91,8 +82,6 @@ export default function Login() {
               <h1 className="text-2xl font-extrabold text-slate-900 mb-1">เข้าสู่ระบบ</h1>
               <p className="text-sm text-slate-500">สำหรับโรงพยาบาลเครือข่ายกรมควบคุมโรค</p>
             </div>
-
-            {/* Error Message */}
             {error && (
               <div className="mb-5 flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>error</span>
@@ -101,7 +90,6 @@ export default function Login() {
             )}
 
             <form onSubmit={handleLogin} className="space-y-5">
-              {/* Username Field */}
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">
                   รหัสโรงพยาบาล (Username)
@@ -120,8 +108,6 @@ export default function Login() {
                   />
                 </div>
               </div>
-
-              {/* Password Field */}
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">
                   รหัสผ่าน (Password)
@@ -147,8 +133,6 @@ export default function Login() {
                   </button>
                 </div>
               </div>
-
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -174,8 +158,6 @@ export default function Login() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
       <footer className="bg-medical-green-900 text-white/70 py-4">
         <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-2 text-xs font-medium">
           <p>© 2026 กองระบาดวิทยา กรมควบคุมโรค กระทรวงสาธารณสุข</p>

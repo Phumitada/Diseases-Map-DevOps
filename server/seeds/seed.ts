@@ -11,6 +11,9 @@ const prisma = new PrismaClient({
       },
     },
   })
+const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
+const randomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+const randomDate = (start: Date, end: Date) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 
 const main = async():Promise<void> => {
     console.log("ดึงข้อมูลอ้างอิง");
@@ -147,6 +150,24 @@ const main = async():Promise<void> => {
     })
   }
   console.log("ดึงข้อมูลโรงพยาบาลเสร็จสิ้น")
+  const allProvinces = await prisma.province.findMany()
+  let hIndex = 10
+  for (const province of allProvinces) {
+    const id = `H${String(hIndex++).padStart(3, '0')}`
+    await prisma.hospital.upsert({
+      where: { id },
+      update: {},
+      create: {
+        id,
+        name: `โรงพยาบาลทั่วไป ${province.id}`,
+        provinceId: province.id,
+        status: 'Active',
+        beds: 200,
+        category: 'General Hospital',
+      }
+    })
+  }
+  console.log("สร้างโรงพยาบาลครบทุกจังหวัดเสร็จสิ้น")
   const Disease:Omit<IDisease,'id'>[] = [
   { icdCode: "J11", name: "ไข้หวัดใหญ่ (Influenza)" },
     { icdCode: "E11", name: "เบาหวาน (Diabetes)" },
@@ -195,6 +216,28 @@ const main = async():Promise<void> => {
     })
   }
   console.log("ดึงข้อมูลผู้ใช้เสร็จสิ้น")
+  const hospitals = await prisma.hospital.findMany()
+  const diseases = await prisma.disease.findMany()
+  const sexOptions = ['ชาย', 'หญิง']
+  const startDate = new Date('2024-01-01')
+  const endDate = new Date('2025-12-31')
+  const TOTAL = 5000
+
+  console.log(`กำลัง generate ${TOTAL} reports...`)
+
+  const batchSize = 100
+  for (let i = 0; i < TOTAL; i += batchSize) {
+    const batch = Array.from({ length: Math.min(batchSize, TOTAL - i) }, () => ({
+      hospitalId: randomItem(hospitals).id,
+      diseaseId: randomItem(diseases).id,
+      age: randomInt(1, 90),
+      sex: randomItem(sexOptions),
+      reportAt: randomDate(startDate, endDate),
+    }))
+
+    await prisma.report.createMany({ data: batch })
+    console.log(`สร้างแล้ว ${Math.min(i + batchSize, TOTAL)}/${TOTAL}`)
+  }
 }
 main()
     .catch((e)=>{

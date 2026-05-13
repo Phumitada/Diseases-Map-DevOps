@@ -3,16 +3,13 @@ import { Activity, MapPin, Hospital, Clock, RefreshCw } from "lucide-react";
 import apiClient from "../../../api/apiClient";
 
 interface RecentReport {
-  _id: string;
-  diseaseName: string;
-  icdCode: string;
-  provinceName: string;
-  hospitalName: string;
-  reportAt: string;
-  sex: string;
-  age: number;
+  id: number
+  disease: { name: string; icdCode: string }
+  hospital: { name: string; province: { name: string } }
+  reportAt: string
+  sex: string
+  age: number
 }
-
 export default function Statistics() {
   const [reports, setReports] = useState<RecentReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +46,6 @@ export default function Statistics() {
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -80,8 +76,6 @@ export default function Statistics() {
             )}
           </div>
         </div>
-
-        {/* Table */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           {isLoading ? (
             <div className="flex items-center justify-center py-20 text-slate-400">
@@ -130,18 +124,18 @@ export default function Statistics() {
                 <tbody>
                   {reports.map((r, i) => (
                     <tr
-                      key={r._id}
+                      key={r.id}
                       className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                     >
                       <td className="px-5 py-3.5 text-slate-400 font-mono text-xs">{i + 1}</td>
-                      <td className="px-5 py-3.5 font-medium text-slate-800">{r.diseaseName}</td>
+                      <td className="px-5 py-3.5 font-medium text-slate-800">{r.disease.name}</td>
                       <td className="px-5 py-3.5">
                         <span className="bg-medical-green-50 text-medical-green-700 text-xs font-mono px-2 py-0.5 rounded">
-                          {r.icdCode}
+                          {r.disease.icdCode}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5 text-slate-700">{r.provinceName}</td>
-                      <td className="px-5 py-3.5 text-slate-600 text-xs">{r.hospitalName}</td>
+                      <td className="px-5 py-3.5 text-slate-700">{r.hospital.province.name}</td>
+                      <td className="px-5 py-3.5 text-slate-600 text-xs">{r.hospital.name}</td>
                       <td className="px-5 py-3.5 text-slate-600">{r.sex} / {r.age} ปี</td>
                       <td className="px-5 py-3.5 text-slate-400 text-xs">{formatDate(r.reportAt)}</td>
                     </tr>

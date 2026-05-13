@@ -81,9 +81,6 @@ export default function AffiliatedHospitals() {
     return () => clearTimeout(timer);
   }, [search, filterType, pagination.page]);
 
-  console.log("Facilities:", facilities);
-  console.log("Pagination:", pagination);
-
   const stats = useMemo(() => {
     const totalFacilities = pagination.total; 
     const totalBeds = facilities.reduce(

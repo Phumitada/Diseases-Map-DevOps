@@ -1,47 +1,54 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Province {
-  id     String @id
-  name   String @unique
+  id        String     @id
+  name      String     @unique
   hospitals Hospital[]
 }
 
 model Hospital {
-  id    String @id
-  name  String 
-  provinceId  String
-  province  Province @relation(fields: [provinceId],references: [id])
-  status  String
-  beds  Int
-  category String?
-  phone String?
+  id        String   @id
+  name      String
+  provinceId String
+  province  Province @relation(fields: [provinceId], references: [id])
+  status    String
+  beds      Int
+  category  String?
+  phone     String?
   emergency String?
-  users User[]
+  users     User[]
+  reports   Report[]
 }
 
 model Disease {
-  id Int @id @default(autoincrement())
-  icdCode String @unique
-  name String
+  id      Int      @id @default(autoincrement())
+  icdCode String   @unique
+  name    String
+  reports Report[]
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String @unique
-  password String
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
   hospitalId String
-  hospital Hospital @relation(fields: [hospitalId], references: [id])
+  hospital   Hospital @relation(fields: [hospitalId], references: [id])
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  hospitalId  String
+  hospital    Hospital @relation(fields: [hospitalId], references: [id])
+  diseaseId   Int
+  disease     Disease  @relation(fields: [diseaseId], references: [id])
+  age         Int
+  sex         String
+  reportAt    DateTime @default(now())
 }
