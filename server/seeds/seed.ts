@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
-import type { IProvince } from '../../shared/types/schema/province'
-import type { IHospital } from '../../shared/types/schema/hospital'
-import { IDisease} from '../../shared/types/schema/disease'
-import { IUser } from '../../shared/types/schema/user'
+
+type IProvince = { id: string; name: string }
+type IHospital = { id: string; name: string; provinceId: string; status: string; beds: number; category?: string; phone?: string; emergency?: string }
+type IDisease = { id?: number; icdCode: string; name: string }
+type IUser = { id?: number; username: string; password: string; hospitalId: string }
 const prisma = new PrismaClient({
     datasources: {
       db: {
