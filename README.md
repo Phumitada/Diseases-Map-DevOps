@@ -12,11 +12,8 @@
 ---
 
 ## Live Demo
+https://diseases-map-git-main-ptd1.vercel.app
 
-| | URL |
-|---|---|
-| **Frontend** | https://your-app.vercel.app |
-| **Backend API** | https://your-api.railway.app |
 
 **Demo Account**
 ```
