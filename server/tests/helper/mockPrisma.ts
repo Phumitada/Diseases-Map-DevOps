@@ -37,6 +37,10 @@ export const mockPrisma = {
   },
 }
 
-vi.mock('@prisma/client', () => ({
-  PrismaClient: vi.fn().mockImplementation(() => mockPrisma)
-}))
+vi.mock('@prisma/client', () => {
+    return {
+      PrismaClient: function() {
+        return mockPrisma
+      }
+    }
+  })
