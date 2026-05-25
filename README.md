@@ -1,19 +1,11 @@
-# National Health Portal — Disease Surveillance System
+# Diseases Map — National Disease Surveillance System
 
-> ระบบเฝ้าระวังและรายงานสถานการณ์โรคแบบ Real-time สำหรับโรงพยาบาลทั่วประเทศไทย  
-> พัฒนาด้วย Full-Stack TypeScript บน PostgreSQL และ deploy บน Railway + Vercel
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Node.js](https://img.shields.io/badge/Node.js-22+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![Prisma](https://img.shields.io/badge/Prisma-6+-2D3748?style=flat&logo=prisma&logoColor=white)](https://www.prisma.io/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/) [![nginx](https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white)](https://nginx.org/) [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions) [![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat&logo=grafana&logoColor=white)](https://grafana.com/)
 
-[![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-22+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-6+-2D3748?style=flat&logo=prisma&logoColor=white)](https://www.prisma.io/)
+A full-stack disease surveillance and reporting system for hospitals across Thailand, built with TypeScript and deployed on production infrastructure with Docker, nginx, SSL, and CI/CD automation.
 
----
-
-## Live Demo
-https://diseases-map-git-main-ptd1.vercel.app
-
+**Live Demo:** https://diseases-map.phumitada.com  
+**API:** https://diseases-map-api.phumitada.com
 
 **Demo Account**
 ```
@@ -23,219 +15,235 @@ Password: admin123
 
 ---
 
-## Features
+## Overview
 
-| หน้า | URL | คำอธิบาย | Access |
-|------|-----|----------|--------|
-| แผนที่โรคระบาด | `/` | Heatmap แสดงสถานการณ์โรครายจังหวัดทั่วประเทศ | Public |
-| ข้อมูลรายจังหวัด | `/provinces` | ตารางสถิติโรคพร้อม filter และ pagination | Public |
-| ประวัติการรายงาน | `/statistics` | รายงานผู้ป่วยล่าสุด 50 รายการ | Public |
-| โรงพยาบาลเครือข่าย | `/hospitals` | รายชื่อโรงพยาบาลทั่วประเทศ | 🔒 Login |
-| รายงานผู้ป่วย | `/reporting` | ฟอร์มส่งรายงานโรคสำหรับบุคลากร | 🔒 Login |
+This system enables hospital personnel to submit patient disease reports and provides public access to real-time disease statistics across all 77 provinces of Thailand through an interactive heatmap and data tables.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Frontend** | React 18 + Vite + TypeScript | UI และ Client-side Logic |
-| **Styling** | Tailwind CSS + Lucide Icons | Medical Green Design System |
-| **State** | Zustand | Auth State + JWT Token Management |
-| **Map** | react-simple-maps | Geographic Heatmap Visualization |
-| **HTTP** | Axios + Interceptors | Auto Token Refresh |
-| **Backend** | Node.js + Express + TypeScript | REST API |
-| **Auth** | JWT (Access + Refresh Token) + bcrypt | Stateless Authentication |
-| **Database** | PostgreSQL 16 | Single Source of Truth |
-| **ORM** | Prisma 6 | Type-safe Database Access |
-| **Cache** | Redis | Refresh Token Storage |
-| **Deploy** | Railway (API + DB) + Vercel (Frontend) | Production Infrastructure |
+**Frontend**
+- React 18, TypeScript, Vite
+- Tailwind CSS, Zustand, Axios
+- react-simple-maps (Geographic Heatmap)
+
+**Backend**
+- Node.js, Express, TypeScript
+- PostgreSQL 16, Prisma ORM
+- JWT Authentication (Access + Refresh Token)
+
+**Infrastructure**
+- Docker, Docker Compose
+- nginx (Reverse Proxy + SSL Termination)
+- Let's Encrypt (SSL Certificate)
+- GitHub Actions (CI/CD Pipeline)
+- DigitalOcean VPS (Ubuntu 24.04)
+- Grafana, Prometheus, Loki (Observability)
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────┐
-│              Client (React + Vite)               │
-│                  Vercel CDN                      │
-└────────────────────┬────────────────────────────┘
-                     │ HTTPS / REST API
-                     ▼
-┌─────────────────────────────────────────────────┐
-│             Express API Server                   │
-│                 Railway                          │
-│                                                  │
-│  /api/auth          /api/report                  │
-│  /api/hospital      /api/province                │
-│  /api/disease       /api/dataProvince            │
-│                                                  │
-│  Middleware: JWT Auth → Role Guard → Controller  │
-└──────────────┬──────────────────────────────────┘
-               │
-       ┌───────┴────────┐
-       ▼                ▼
-┌────────────┐   ┌─────────────┐
-│ PostgreSQL │   │    Redis     │
-│  Railway   │   │   Railway    │
-│            │   │              │
-│ Province   │   │ Refresh      │
-│ Hospital   │   │ Tokens       │
-│ Disease    │   └─────────────┘
-│ User       │
-│ Report     │
-└────────────┘
+Client (React + Vite)
+  |-- HTTPS
+  v
+nginx (Reverse Proxy)
+  |-- /                  --> Frontend Container  (port 5201)
+  |-- api subdomain      --> Backend Container   (port 5002)
+  v
+Express API Server
+  |-- /api/auth
+  |-- /api/report
+  |-- /api/hospital
+  |-- /api/provinces
+  |-- /api/dataProvince
+  v
+PostgreSQL Container     Redis Container
 ```
 
-### Database Schema
+**Database Schema**
+```
+Province --< Hospital --< User
+               |
+               +--< Report >-- Disease
+```
+
+| Table    | Records | Description                    |
+|----------|---------|--------------------------------|
+| Province | 77      | All provinces in Thailand       |
+| Hospital | 77+     | Hospitals per province          |
+| Disease  | 13      | Diseases with ICD-10 codes      |
+| User     | 12+     | Hospital personnel              |
+| Report   | 5,000+  | Patient disease reports         |
+
+---
+
+## CI/CD Pipeline
+
+Every push to `main` triggers the following pipeline via GitHub Actions:
 
 ```
-Province ──< Hospital ──< User
-                │
-                └──< Report >── Disease
+git push origin main
+  --> Run unit tests (Vitest)
+  --> SSH into VPS
+  --> git pull origin main
+  --> docker compose up -d --build
 ```
 
-| Table | Records | Description |
-|-------|---------|-------------|
-| Province | 77 | จังหวัดทั่วประเทศไทย |
-| Hospital | 77+ | โรงพยาบาลแต่ละจังหวัด |
-| Disease | 13 | โรคพร้อม ICD-10 Code |
-| User | 12+ | บุคลากรโรงพยาบาล |
-| Report | 5,000+ | รายงานผู้ป่วย |
+Deployment only proceeds if all tests pass.
+
+---
+
+## Observability
+
+Production monitoring is implemented with the Grafana PLG stack:
+
+- **Prometheus** — Metrics collection (CPU, RAM, Disk, Network)
+- **Node Exporter** — Host-level metrics
+- **cAdvisor** — Per-container metrics
+- **Loki + Promtail** — Centralized log aggregation
+- **Grafana** — Dashboard and alerting
+
+---
+
+## Features
+
+| Route         | Description                                      | Access   |
+|---------------|--------------------------------------------------|----------|
+| /             | Province heatmap with risk-level color coding    | Public   |
+| /provinces    | Disease statistics table with filter, pagination | Public   |
+| /statistics   | Latest 50 patient reports                        | Public   |
+| /hospitals    | Hospital directory                               | Private  |
+| /reporting    | Patient report submission form                   | Private  |
+
+**Risk Classification**
+
+| Level     | Range           |
+|-----------|-----------------|
+| Normal    | 0 - 500 cases   |
+| Warning   | 501 - 3,000 cases |
+| Emergency | 3,000+ cases    |
 
 ---
 
 ## Local Development
 
-### Prerequisites
-
+**Prerequisites**
 - Node.js 22+
-- PostgreSQL 16+
-- Redis
+- Docker Desktop
 - npm
 
-### Installation
+**Option 1 — Docker (Recommended)**
 
 ```bash
-# Clone
-git clone <repository-url>
-cd diseases-map
+git clone https://github.com/Phumitada/Diseases-Map-DevOps.git
+cd Diseases-Map-DevOps
 
-# Install server dependencies
-cd server && npm install
+cp .env.example .env
+# Edit .env with your values
 
-# Install client dependencies
-cd ../client && npm install
+docker compose up --build
 ```
 
-### Environment Variables
+Access the application at http://localhost:5201
 
-สร้างไฟล์ `server/.env`
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/diseases_map"
-REDIS_URL="redis://localhost:6379"
-ACCESS_TOKEN_SECRET=your_secret
-REFRESH_TOKEN_SECRET=your_secret
-ACCESS_TOKEN_EXPIRES=15m
-REFRESH_TOKEN_EXPIRES=7d
-PORT=5207
-```
-
-สร้างไฟล์ `client/.env`
-
-```env
-VITE_API_URL=http://localhost:5207/api
-```
-
-### Database Setup
+**Option 2 — Manual**
 
 ```bash
+# Backend
 cd server
-
-# Run migrations
+npm install
 npx prisma migrate dev
-
-# Seed initial data (provinces, hospitals, diseases, users, 5000 reports)
 npx prisma db seed
+npm run dev
+
+# Frontend
+cd client
+npm install
+npm run dev
 ```
 
-### Start Development Servers
+**Environment Variables**
 
-```bash
-# Backend (port 5207)
-cd server && npm run dev
+Create `.env` at project root:
 
-# Frontend (port 5173)
-cd client && npm run dev
+```env
+POSTGRES_DB=appdb
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=your_password
+DATABASE_URL=postgresql://admin:your_password@db:5432/appdb
+JWT_SECRET=your_jwt_secret
+PORT=5000
+FRONTEND_URL=https://diseases-map.phumitada.com
 ```
 
-เปิด http://localhost:5173
+Create `client/.env`:
+
+```env
+VITE_API_URL=http://localhost:5002/api
+```
 
 ---
 
 ## API Reference
 
-### Authentication
+**Authentication**
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/api/auth/login` | เข้าสู่ระบบ รับ access + refresh token | — |
-| `POST` | `/api/auth/register` | สมัครสมาชิก | — |
-| `POST` | `/api/auth/refresh` | ต่ออายุ access token | — |
-| `POST` | `/api/auth/logout` | ออกจากระบบ ลบ refresh token | 🔒 |
+| Method | Endpoint            | Description              | Auth    |
+|--------|---------------------|--------------------------|---------|
+| POST   | /api/auth/login     | Login, receive tokens    | Public  |
+| POST   | /api/auth/register  | Register new user        | Public  |
+| POST   | /api/auth/refresh   | Refresh access token     | Public  |
+| POST   | /api/auth/logout    | Logout, revoke token     | Private |
 
-### Reports
+**Province Data**
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/api/report/recent` | รายงานล่าสุด (limit query param) | — |
-| `POST` | `/api/report` | ส่งรายงานผู้ป่วยใหม่ | 🔒 |
+| Method | Endpoint                    | Description                    | Query Params                    |
+|--------|-----------------------------|--------------------------------|---------------------------------|
+| GET    | /api/dataProvince           | Disease statistics by province | page, limit, order, risk        |
+| GET    | /api/dataProvince/count     | Aggregate counts by type       | type (province/disease/total)   |
+| GET    | /api/dataProvince/map       | Heatmap data                   | risk, order, disease            |
 
-### Province Data (Map & Dashboard)
+**Reports**
 
-| Method | Endpoint | Description | Query Params |
-|--------|----------|-------------|-------------|
-| `GET` | `/api/dataProvince` | สถิติโรคแยกจังหวัด | `page`, `limit`, `order`, `risk` |
-| `GET` | `/api/dataProvince/count` | จำนวนรวมแยกตาม type | `type` (province/disease/total) |
-| `GET` | `/api/dataProvince/map` | ข้อมูลสำหรับ heatmap | `risk`, `order`, `disease` |
-
-### Hospitals & Provinces
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/api/hospital` | รายชื่อโรงพยาบาล | 🔒 |
-| `GET` | `/api/provinces` | รายชื่อจังหวัดทั้งหมด | — |
+| Method | Endpoint          | Description               | Auth    |
+|--------|-------------------|---------------------------|---------|
+| GET    | /api/report/recent| Latest reports            | Public  |
+| POST   | /api/report       | Submit patient report     | Private |
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
-diseases-map/
-│
-├── client/                     # React Frontend
-│   └── src/
-│       ├── api/                # Axios client + interceptors
-│       ├── components/         # Shared components (Map, Navbar)
-│       ├── features/
-│       │   ├── map/            # Heatmap dashboard
-│       │   ├── dash_txt/       # Province statistics table
-│       │   ├── hospitals/      # Hospital directory
-│       │   ├── statistics/     # Recent reports
-│       │   └── login/
-│       ├── routes/             # React Router
-│       └── stores/             # Zustand auth store
-│
-├── server/                     # Express Backend
+Diseases-Map-DevOps/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # CI/CD pipeline
+├── client/                     # React frontend
+│   ├── src/
+│   │   ├── api/                # Axios client + interceptors
+│   │   ├── components/         # Shared components
+│   │   ├── features/           # Feature modules
+│   │   ├── routes/             # React Router
+│   │   └── stores/             # Zustand state
+│   └── Dockerfile
+├── server/                     # Express backend
 │   ├── controllers/            # Request handlers
 │   ├── routes/                 # API routes
-│   ├── middleware/             # JWT auth middleware
-│   ├── prisma/                 # Schema + Migrations
-│   └── seeds/                  # Database seed scripts
-│
-└── shared/                     # Shared TypeScript types
-    └── types/schema/
+│   ├── middleware/             # Auth middleware
+│   ├── prisma/                 # Schema + migrations
+│   ├── seeds/                  # Seed scripts
+│   └── tests/                  # Unit tests
+│       ├── helpers/
+│       │   └── mockPrisma.ts
+│       └── units/
+│           └── dataProvince.test.ts
+├── shared/                     # Shared TypeScript types
+├── Dockerfile.frontend
+└── docker-compose.yml
 ```
 
 ---
@@ -243,26 +251,15 @@ diseases-map/
 ## Authentication Flow
 
 ```
-Login → Access Token (15m) + Refresh Token (7d, stored in Redis)
-         │
-         ▼
-Request with Bearer Token
-         │
-    Token expired?
-    ├── No  → proceed
-    └── Yes → auto refresh via interceptor → retry request
-                    │
-               Refresh expired?
-               └── redirect to login
+POST /api/auth/login
+  --> Access Token  (15 minutes, Bearer)
+  --> Refresh Token (7 days, stored in Redis)
+
+Subsequent requests:
+  Authorization: Bearer <access_token>
+
+Token expired:
+  --> Axios interceptor auto-calls POST /api/auth/refresh
+  --> Retries original request
+  --> Redirects to login if refresh token also expired
 ```
-
----
-
-## Data Model Highlights
-
-**Report aggregation** — Province heatmap คำนวณจาก groupBy hospital → join province แบบ in-memory เพื่อรองรับ filter risk level และ disease filter แบบ dynamic
-
-**Risk Classification**
-- 🟢 ปกติ: 0–500 ราย
-- 🟡 เฝ้าระวัง: 501–3,000 ราย  
-- 🔴 ฉุกเฉิน: 3,000+ ราย
