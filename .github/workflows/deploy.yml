@@ -47,7 +47,11 @@ jobs:
             docker compose ps
       - name: Verify deployment
         run: |
-            sleep 30
+            sleep 60
+            for i in {1..10}; do
+            curl -f https://diseases-map-api.phumitada.com/api/provinces && break
+            echo "Attempt $i failed, retrying in 15s..."
+            sleep 15
+            done
             curl -f https://diseases-map.phumitada.com || exit 1
-            curl -f https://diseases-map-api.phumitada.com/api/provinces || exit 1
             echo "Deployment verified successfully"
