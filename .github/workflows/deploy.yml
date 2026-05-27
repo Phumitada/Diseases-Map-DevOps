@@ -47,7 +47,7 @@ jobs:
             docker compose ps
       - name: Verify deployment
         run: |
-            sleep 10
+            sleep 30
             curl -f https://diseases-map.phumitada.com || exit 1
             curl -f https://diseases-map-api.phumitada.com/api/provinces || exit 1
             echo "Deployment verified successfully"
